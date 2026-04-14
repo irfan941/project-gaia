@@ -1,8 +1,8 @@
 """
-Aria — Obsidian Auto-Sync Watcher
+Gaia — Obsidian Auto-Sync Watcher
 -----------------------------------
 Watches your Obsidian vault folder for new or changed .md files
-and automatically ingests them into Aria's second brain.
+and automatically ingests them into Gaia's second brain.
 
 Usage:
     python watcher.py
@@ -24,7 +24,7 @@ from watchdog.events import FileSystemEventHandler
 # ─── CONFIG ───────────────────────────────────────────────────────────────────
 
 VAULT_PATH = os.getenv("OBSIDIAN_VAULT", r"C:\Users\irfan\Documents\ObsidianVault")
-ARIA_API   = os.getenv("ARIA_API_URL", "http://localhost:8000")
+GAIA_API   = os.getenv("GAIA_API_URL", "http://localhost:8000")
 CACHE_FILE = Path(__file__).parent / ".sync_cache.json"
 
 # ─── LOGGING ──────────────────────────────────────────────────────────────────
@@ -52,7 +52,7 @@ def file_hash(path: str) -> str:
 # ─── INGEST ───────────────────────────────────────────────────────────────────
 
 def ingest_file(path: str):
-    """Send a markdown file to Aria's /api/ingest/text endpoint."""
+    """Send a markdown file to Gaia's /api/ingest/text endpoint."""
     try:
         content = Path(path).read_text(encoding="utf-8", errors="ignore").strip()
         if not content:
@@ -62,7 +62,7 @@ def ingest_file(path: str):
         relative = os.path.relpath(path, VAULT_PATH)
 
         response = requests.post(
-            f"{ARIA_API}/api/ingest/text",
+            f"{GAIA_API}/api/ingest/text",
             json={
                 "title": title,
                 "content": content,
@@ -154,9 +154,9 @@ def full_sync(handler: VaultHandler):
 
 def main():
     log.info("=" * 50)
-    log.info("Aria Obsidian Sync Watcher")
+    log.info("Gaia Obsidian Sync Watcher")
     log.info(f"Vault : {VAULT_PATH}")
-    log.info(f"API   : {ARIA_API}")
+    log.info(f"API   : {GAIA_API}")
     log.info("=" * 50)
 
     handler = VaultHandler()

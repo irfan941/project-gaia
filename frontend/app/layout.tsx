@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Aria — Personal AI",
+  title: "Gaia — Personal AI",
   description: "Your personal AI assistant and second brain",
 };
 

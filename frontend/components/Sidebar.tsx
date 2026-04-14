@@ -21,7 +21,7 @@ export default function Sidebar({ conversations, activeId, onSelect, onNew, onDe
       <div className="p-4 border-b" style={{ borderColor: "var(--border)" }}>
         <div className="flex items-center gap-2 mb-3">
           <Brain size={20} style={{ color: "var(--accent)" }} />
-          <span className="font-semibold text-sm tracking-wide">ARIA</span>
+          <span className="font-semibold text-sm tracking-wide">GAIA</span>
         </div>
         <button
           onClick={onNew}

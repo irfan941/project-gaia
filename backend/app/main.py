@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .database import init_db
 from .routers import chat, ingest, memory
 
-app = FastAPI(title="Aria — Personal AI Assistant", version="1.0.0")
+app = FastAPI(title="Gaia — Personal AI Assistant", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,4 +26,4 @@ app.include_router(memory.router, prefix="/api/memory", tags=["memory"])
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "name": "Aria"}
+    return {"status": "ok", "name": "Gaia"}

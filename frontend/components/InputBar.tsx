@@ -70,7 +70,7 @@ export default function InputBar({ onSend, disabled }: Props) {
         </button>
       </div>
       <p className="text-xs mt-2 text-center" style={{ color: "var(--muted)" }}>
-        Aria can make mistakes. Verify important information.
+        Gaia can make mistakes. Verify important information.
       </p>
     </div>
   );

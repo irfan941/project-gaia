@@ -4,13 +4,13 @@ services:
   db:
     image: pgvector/pgvector:pg16
     environment:
-      POSTGRES_DB: aria
+      POSTGRES_DB: gaia
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports:
       - "5433:5432"
     volumes:
-      - aria_pgdata:/var/lib/postgresql/data
+      - gaia_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -23,7 +23,7 @@ services:
       - "8000:8000"
     env_file: ./backend/.env
     environment:
-      - DATABASE_URL=postgresql+psycopg://postgres:password@db:5432/aria
+      - DATABASE_URL=postgresql+psycopg://postgres:password@db:5432/gaia
     depends_on:
       db:
         condition: service_healthy
@@ -32,4 +32,4 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 volumes:
-  aria_pgdata:
+  gaia_pgdata:
