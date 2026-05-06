@@ -29,7 +29,7 @@ Most AI memory systems are markdown-only — powerful, but require you to manual
 | **Memory auto-commit** | Built-in watcher | Feature extension |
 | **IDE integration** | MCP server for Claude Code | Skill Plugin System |
 | **Obsidian sync** | Auto-ingests vault on save | None |
-| **Cost** | Free ✅ (Gemini — no payment needed) | Free ✅ (no API needed) |
+| **Cost** | Claude API (pay per use) | Free ✅ (no API needed) |
 
 ### Memory Types: Gaia (9) vs MemoryCore (18+)
 
@@ -64,7 +64,7 @@ Auto-Commit, Decision Log, Echo Recall, Forge Self-Improvement, Image Prompt, In
 - **Obsidian Sync** — Auto-syncs your Obsidian vault into Gaia's knowledge base on every save
 - **Nightly Diary** — Reads today's conversations from DB and writes a structured diary entry
 - **Memory Auto-Commit** — Every `.md` write in `memory/` is committed to git automatically
-- **Dual LLM** — Gemini 2.0 Flash (free, 1500 req/day) with Claude Sonnet as fallback
+- **Claude Sonnet** — Powered exclusively by Anthropic Claude
 
 ---
 
@@ -74,8 +74,7 @@ Auto-Commit, Decision Log, Echo Recall, Forge Self-Improvement, Image Prompt, In
 |---|---|
 | Backend | FastAPI, Python 3.12 |
 | Database | PostgreSQL + pgvector |
-| AI (primary) | Google Gemini 2.0 Flash (free tier) |
-| AI (fallback) | Anthropic Claude Sonnet |
+| AI | Anthropic Claude Sonnet |
 | Embeddings | FastEmbed (local, no cost) |
 | Memory | Markdown files + git |
 | IDE integration | MCP server for Claude Code |
@@ -138,8 +137,7 @@ gaia/
 
 - Python 3.12+
 - Docker Desktop
-- Google Gemini API key (free, no payment needed) → [aistudio.google.com](https://aistudio.google.com)
-- Anthropic API key (optional fallback) → [console.anthropic.com](https://console.anthropic.com)
+- Anthropic API key → [console.anthropic.com](https://console.anthropic.com)
 
 ### 1. Clone the repo
 
@@ -153,7 +151,7 @@ cd project-gaia
 ```bash
 cd backend
 cp .env.example .env   # Windows: copy .env.example .env
-# Edit .env — add GEMINI_API_KEY (and optionally ANTHROPIC_API_KEY)
+# Edit .env — add your ANTHROPIC_API_KEY
 ```
 
 ### 3. Set up the memory folder

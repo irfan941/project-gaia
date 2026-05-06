@@ -1,8 +1,6 @@
 import datetime
 import logging
 import anthropic
-from google import genai
-from google.genai import types as gtypes
 from ..config import settings
 from ..models.document import Document, UserMemory
 from .memory_loader import load_core, load_open_reminders, load_skills_for_message
@@ -15,7 +13,6 @@ FALLBACK_IDENTITY = (
 )
 
 _anthropic_client: anthropic.Anthropic | None = None
-_gemini_client: genai.Client | None = None
 
 
 def _get_anthropic():
@@ -23,13 +20,6 @@ def _get_anthropic():
     if _anthropic_client is None and settings.anthropic_api_key:
         _anthropic_client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
     return _anthropic_client
-
-
-def _get_gemini():
-    global _gemini_client
-    if _gemini_client is None and settings.gemini_api_key:
-        _gemini_client = genai.Client(api_key=settings.gemini_api_key)
-    return _gemini_client
 
 
 def _time_context() -> str:
@@ -83,48 +73,6 @@ def build_system_prompt(memories: list[UserMemory], context_docs: list[Document]
     return "".join(parts)
 
 
-def _to_gemini_history(messages: list[dict]) -> list[gtypes.Content]:
-    history = []
-    first_user_seen = False
-    for m in messages[:-1]:
-        # Gemini history must start with a user message — skip leading assistant messages
-        if not first_user_seen and m["role"] != "user":
-            continue
-        first_user_seen = True
-        role = "model" if m["role"] == "assistant" else "user"
-        history.append(gtypes.Content(role=role, parts=[gtypes.Part(text=m["content"])]))
-    return history
-
-
-def _stream_gemini(messages: list[dict], system: str):
-    client = _get_gemini()
-    if not client:
-        raise RuntimeError("Gemini not configured")
-
-    # Build full contents list — skip leading non-user messages (Gemini requires user-first)
-    contents = []
-    first_user_seen = False
-    for m in messages:
-        if not first_user_seen and m["role"] != "user":
-            continue
-        first_user_seen = True
-        role = "user" if m["role"] == "user" else "model"
-        contents.append(gtypes.Content(role=role, parts=[gtypes.Part(text=m["content"])]))
-
-    response = client.models.generate_content_stream(
-        model=settings.gemini_model,
-        contents=contents,
-        config=gtypes.GenerateContentConfig(
-            system_instruction=system,
-            max_output_tokens=4096,
-        ),
-    )
-
-    for chunk in response:
-        if chunk.text:
-            yield chunk.text
-
-
 def _stream_claude(messages: list[dict], system: str):
     client = _get_anthropic()
     if not client:
@@ -141,18 +89,11 @@ def _stream_claude(messages: list[dict], system: str):
 
 
 def stream_chat(messages: list[dict], memories: list[UserMemory], context_docs: list[Document]):
-    """Yields text chunks. Tries Gemini first, falls back to Claude on quota/error."""
+    """Yields text chunks from Claude."""
     last_message = messages[-1]["content"] if messages else ""
     system = build_system_prompt(memories, context_docs, last_message)
-
-    if settings.gemini_api_key:
-        try:
-            yield from _stream_gemini(messages, system)
-            return
-        except Exception as e:
-            logger.warning("Gemini error — falling back to Claude: %s", repr(e))
 
     if settings.anthropic_api_key:
         yield from _stream_claude(messages, system)
     else:
-        yield "⚠️ No AI provider available. Add GEMINI_API_KEY or ANTHROPIC_API_KEY to backend/.env"
+        yield "⚠️ No AI provider configured. Add ANTHROPIC_API_KEY to backend/.env"
