@@ -20,20 +20,26 @@ Most AI memory systems are markdown-only — powerful, but require you to manual
 
 | | Gaia | MemoryCore |
 |---|---|---|
-| **Use case** | AI companion in IDE | Standalone AI chatbot |
-| **Memory storage** | Markdown files (git-backed) | Markdown files |
-| **Semantic search** | pgvector RAG over all notes | None |
+| **Philosophy** | Backend-first, automated | Markdown-first, modular |
+| **Target user** | Developer (self-hosted) | Anyone, any AI |
+| **Storage** | PostgreSQL + pgvector + markdown | Markdown files only |
+| **Platform support** | Claude only | Any AI (Claude, ChatGPT, Gemini, etc.) |
 | **Memory types** | 9 structured types | 18+ modular extensions |
-| **Session briefing** | Auto-injected on new conversation | Manual setup |
-| **Nightly diary** | Auto-written from conversation DB | Manual |
-| **Memory auto-commit** | Built-in watcher | Feature extension |
-| **IDE integration** | MCP server for Claude Code | Skill Plugin System |
-| **Obsidian sync** | Auto-ingests vault on save | None |
-| **Cost** | Claude API (pay per use) | Free ✅ (no API needed) |
+| **Modular / pick features** | ❌ All-or-nothing stack | ✅ Install what you need |
+| **Semantic search** | ✅ pgvector RAG over all notes | ❌ None |
+| **Session briefing** | ✅ Auto-injected on new conversation | ⚠️ Optional install, manual setup |
+| **Nightly diary** | ✅ Auto-written by script | ⚠️ Optional install, manual save |
+| **Memory auto-commit** | ✅ Built-in watcher | ⚠️ Optional install |
+| **MCP / Claude Code** | ✅ Native MCP server | ⚠️ Via Skill Plugin (optional) |
+| **Obsidian sync** | ✅ Auto-ingests vault on save | ❌ None |
+| **Offline / private** | ✅ Self-hosted (your server, your DB) | ✅ Local files (no server at all) |
+| **Cost** | Anthropic API (pay per token) | ✅ Free (no API needed) |
+
+> **Offline difference:** Gaia is self-hosted — it runs on your own machine but requires Docker, PostgreSQL, and a running backend process. MemoryCore is just files — no server, no database, no process to keep alive. Both keep your data fully private, but MemoryCore has zero infrastructure footprint.
 
 ### Memory Types: Gaia (9) vs MemoryCore (18+)
 
-**Gaia — 9 structured types, each with a specific API and format:**
+**Gaia — 9 structured types, each with a dedicated API endpoint and format:**
 
 | Type | Purpose |
 |---|---|
@@ -47,10 +53,10 @@ Most AI memory systems are markdown-only — powerful, but require you to manual
 | `diary/` | Daily conversation diary, auto-written by nightly script |
 | `library/` | Reference knowledge items organised by topic |
 
-**MemoryCore — 18+ modular extensions (install what you need):**
+**MemoryCore — 18+ modular extensions (install only what you need):**
 Auto-Commit, Decision Log, Echo Recall, Forge Self-Improvement, Image Prompt, Interactive Story, LRU Projects, Library, Memory Consolidation, Mulahazah (observation rules), Observation, Post-Mortem, Reminders, Save Diary, Session Briefing, Skill Plugin, Song Creation, Time-Aware, Work Plan Execution.
 
-**Trade-off:** MemoryCore is more modular and requires no backend — just copy the markdown files. Gaia is opinionated and requires Docker, but gives you semantic search, automatic diary writing, and a REST API that any tool can call.
+**Trade-off:** MemoryCore works with any AI, costs nothing, and needs zero infrastructure. Gaia requires Docker and an Anthropic API key, but gives you automatic diary writing, semantic search over all your notes, and a REST API that any tool can call.
 
 ---
 
