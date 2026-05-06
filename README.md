@@ -1,291 +1,179 @@
-# Gaia — Personal AI Companion for CLI & IDE
+# 🧠 Gaia — Personal AI Companion
+*A markdown-first memory system for your AI — works with any AI, zero infrastructure*
 
-A self-hosted AI companion that lives inside your IDE and CLI. Gaia knows who you are, remembers your decisions, tracks your projects, and queries your notes — all through Claude Code's MCP integration, with no web UI required.
-
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-pgvector-336791?style=flat-square&logo=postgresql)
-![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![Storage](https://img.shields.io/badge/storage-markdown%20only-green?style=flat-square)](#)
+[![AI](https://img.shields.io/badge/AI-any-purple?style=flat-square)](#)
+[![Cost](https://img.shields.io/badge/cost-free-brightgreen?style=flat-square)](#)
 
 ---
 
-## Why Gaia
+## What This Does
 
-Most AI memory systems are markdown-only — powerful, but require you to manually manage files and inject context yourself. Gaia adds a backend that does this automatically: semantic search over your notes, structured memory endpoints, and a session brief injected at the start of every conversation.
+Gaia gives your AI companion persistent memory across conversations. Using simple `.md` files as a database, your AI can remember your preferences, track your projects, log your decisions, and provide consistent interactions — with zero infrastructure required.
+
+**No server. No database. No Docker. Just markdown files.**
+
+Works with Claude, ChatGPT, Gemini, or any AI that supports custom instructions or file memory.
+
+---
+
+## Key Features
+
+- **Persistent Memory** — AI remembers you across sessions via markdown files
+- **9 Structured Memory Types** — Decisions, reminders, plans, projects, diary, library, skills, post-mortems, core identity
+- **Modular** — Install only the features you need
+- **Any AI** — Claude, ChatGPT, Gemini, or any AI with custom instructions
+- **Session Briefing** — Auto-delivers context at session start (projects, reminders, diary)
+- **Skill Plugins** — Custom AI behaviors that auto-trigger on keywords
+- **Auto-Archive** — Diary files auto-archive at 1000 lines
+- **Git Backup** — Optional auto-commit watches memory and commits every change
+- **Zero Cost** — No API fees for the memory system itself
+
+---
+
+## Quick Start
+
+**5 minutes to a fully working AI companion:**
+
+### 1. Copy the core files
+```
+master-memory.md
+main/identity-core.md
+main/user-profile.md
+main/current-session.md
+```
+
+### 2. Fill in your profile
+Open `main/user-profile.md` — replace all `[PLACEHOLDERS]` with your real info.
+
+### 3. Load into your AI
+Paste `master-memory.md` into your system prompt, or attach the files to your AI.
+
+### 4. Activate
+Type **"Gaia"** — your AI companion is ready.
+
+> See [setup-guide.md](./setup-guide.md) for detailed instructions and AI-specific setup.
+
+---
+
+## File Structure
+
+```
+gaia/
+├── master-memory.md          # Entry point — load this first
+├── main/
+│   ├── identity-core.md      # AI personality and rules template
+│   ├── user-profile.md       # Your profile, projects, preferences
+│   └── current-session.md    # Session RAM — resets each conversation
+├── Feature/                  # Optional features — install what you need
+│   ├── Reminders/
+│   ├── Decision-Log/
+│   ├── Daily-Diary/
+│   ├── LRU-Projects/
+│   ├── Work-Plans/
+│   ├── Post-Mortem/
+│   ├── Library/
+│   ├── Skills/
+│   └── Auto-Commit/
+├── setup-guide.md            # Full setup instructions
+└── backend/                  # Optional: self-hosted backend with RAG search
+```
+
+---
+
+## Available Features
+
+Features are organized by use — install only what you need. Each feature is a single `SKILL.md` file.
+
+### Tier 1 — Memory & Documentation
+
+| Feature | Description | Load Command |
+|---|---|---|
+| Reminders | Persistent cross-session to-dos with due dates | `"Load reminders"` |
+| Decision Log | Append-only record of decisions and reasoning | `"Load decision log"` |
+| Daily Diary | Session documentation with auto-archive at 1000 lines | `"Load diary"` |
+
+### Tier 2 — Project & Work Management
+
+| Feature | Description | Load Command |
+|---|---|---|
+| LRU Projects | Smart project tracker — 10 active slots, auto-archives overflow | `"Load projects"` |
+| Work Plans | Step-by-step execution plans with checklist tracking | `"Load work plan"` |
+| Post-Mortem | Failure learning log — what went wrong, why, prevention | `"Load post-mortem"` |
+
+### Tier 3 — Knowledge & Automation
+
+| Feature | Description | Load Command |
+|---|---|---|
+| Library | Reusable knowledge base organised by topic | `"Load library"` |
+| Skills | Custom AI skills that auto-trigger on keywords | `"Load skills"` |
+| Auto-Commit | Git backup — commits every memory file change automatically | `"Load auto-commit"` |
+
+---
+
+## Basic Commands
+
+```
+"Gaia"              → Load full memory and personality
+"save"              → Save session progress to files
+"update memory"     → Refresh knowledge and preferences
+"review"            → Show active projects + open reminders
+```
 
 ---
 
 ## vs Project-AI-MemoryCore
 
-[Project-AI-MemoryCore](https://github.com/Kiyoraka/Project-AI-MemoryCore) is the inspiration for Gaia's memory design. Here's how they differ:
+[Project-AI-MemoryCore](https://github.com/Kiyoraka/Project-AI-MemoryCore) is the inspiration for Gaia's memory design.
 
 | | Gaia | MemoryCore |
 |---|---|---|
-| **Philosophy** | Backend-first, automated | Markdown-first, modular |
-| **Target user** | Developer (self-hosted) | Anyone, any AI |
-| **Storage** | PostgreSQL + pgvector + markdown | Markdown files only |
-| **Platform support** | Claude only | Any AI (Claude, ChatGPT, Gemini, etc.) |
+| **Philosophy** | Markdown-first, modular | Markdown-first, modular |
+| **Target user** | Anyone, any AI | Anyone, any AI |
+| **Storage** | Markdown files only | Markdown files only |
+| **Platform support** | Any AI (Claude, ChatGPT, Gemini, etc.) | Any AI (Claude, ChatGPT, Gemini, etc.) |
 | **Memory types** | 9 structured types | 18+ modular extensions |
-| **Modular / pick features** | ❌ All-or-nothing stack | ✅ Install what you need |
-| **Semantic search** | ✅ pgvector RAG over all notes | ❌ None |
-| **Session briefing** | ✅ Auto-injected on new conversation | ⚠️ Optional install, manual setup |
-| **Nightly diary** | ✅ Auto-written by script | ⚠️ Optional install, manual save |
-| **Memory auto-commit** | ✅ Built-in watcher | ⚠️ Optional install |
-| **MCP / Claude Code** | ✅ Native MCP server | ⚠️ Via Skill Plugin (optional) |
-| **Obsidian sync** | ✅ Auto-ingests vault on save | ❌ None |
-| **Offline / private** | ✅ Self-hosted (your server, your DB) | ✅ Local files (no server at all) |
-| **Cost** | Anthropic API (pay per token) | ✅ Free (no API needed) |
+| **Modular / pick features** | ✅ Install what you need | ✅ Install what you need |
+| **Offline / private** | ✅ Local files only | ✅ Local files only |
+| **Cost** | ✅ Free (no API needed) | ✅ Free (no API needed) |
+| **Infrastructure** | Zero | Zero |
+| **Semantic search** | ⚠️ Optional (requires backend) | ❌ None |
+| **Nightly diary** | ⚠️ Optional (requires backend) | ⚠️ Optional install, manual save |
+| **MCP / Claude Code** | ⚠️ Optional (requires backend) | ⚠️ Via Skill Plugin |
 
-> **Offline difference:** Gaia is self-hosted — it runs on your own machine but requires Docker, PostgreSQL, and a running backend process. MemoryCore is just files — no server, no database, no process to keep alive. Both keep your data fully private, but MemoryCore has zero infrastructure footprint.
-
-### Memory Types: Gaia (9) vs MemoryCore (18+)
-
-**Gaia — 9 structured types, each with a dedicated API endpoint and format:**
-
-| Type | Purpose |
-|---|---|
-| `core/` | Identity, user profile, rules — always loaded every prompt |
-| `skills/` | Skill protocols — loaded only when message matches triggers |
-| `reminders/` | Open and completed reminders with due dates |
-| `decisions/` | Append-only decision log with context + rationale |
-| `plans/` | Markdown checklists for active work plans |
-| `projects/` | LRU project tracker (max 10 active, auto-archives overflow) |
-| `post-mortems/` | Post-mortem analysis with what/why/prevention |
-| `diary/` | Daily conversation diary, auto-written by nightly script |
-| `library/` | Reference knowledge items organised by topic |
-
-**MemoryCore — 18+ modular extensions (install only what you need):**
-Auto-Commit, Decision Log, Echo Recall, Forge Self-Improvement, Image Prompt, Interactive Story, LRU Projects, Library, Memory Consolidation, Mulahazah (observation rules), Observation, Post-Mortem, Reminders, Save Diary, Session Briefing, Skill Plugin, Song Creation, Time-Aware, Work Plan Execution.
-
-**Trade-off:** MemoryCore works with any AI, costs nothing, and needs zero infrastructure. Gaia requires Docker and an Anthropic API key, but gives you automatic diary writing, semantic search over all your notes, and a REST API that any tool can call.
+**Key difference**: Gaia comes with an optional self-hosted backend (`backend/`) that adds semantic search (RAG), auto-generated diary from conversation history, and a REST API — for users who want those features. It is not required.
 
 ---
 
-## Features
+## Optional: Self-Hosted Backend (Advanced)
 
-- **MCP Server** — Query your second brain directly from Claude Code in VS Code or any IDE
-- **Structured Memory** — 9 typed memory stores accessible via REST API: decisions, reminders, plans, projects, post-mortems, library, diary, skills, core
-- **Semantic Search (RAG)** — pgvector search over all ingested notes and documents
-- **Session Briefing** — Auto-injected at conversation start: active projects, open reminders, recent diary snippet
-- **Skill Injection** — Context-aware skill files loaded only when message matches `<!-- triggers: kw1, kw2 -->`
-- **Obsidian Sync** — Auto-syncs your Obsidian vault into Gaia's knowledge base on every save
-- **Nightly Diary** — Reads today's conversations from DB and writes a structured diary entry
-- **Memory Auto-Commit** — Every `.md` write in `memory/` is committed to git automatically
-- **Claude Sonnet** — Powered exclusively by Anthropic Claude
+For semantic search over all your notes, automatic diary writing, and a REST API:
 
----
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Backend | FastAPI, Python 3.12 |
-| Database | PostgreSQL + pgvector |
-| AI | Anthropic Claude Sonnet |
-| Embeddings | FastEmbed (local, no cost) |
-| Memory | Markdown files + git |
-| IDE integration | MCP server for Claude Code |
-| Infra | Docker, Docker Compose |
-
----
-
-## Project Structure
-
-```
-gaia/
-├── backend/
-│   ├── app/
-│   │   ├── models/         # SQLAlchemy models (conversations, documents, memories)
-│   │   ├── routers/
-│   │   │   ├── chat.py         # Streaming chat + conversation CRUD
-│   │   │   ├── ingest.py       # Document ingestion + semantic search
-│   │   │   ├── memory.py       # Key-value memory store
-│   │   │   └── structured.py   # Decisions, reminders, plans, projects, post-mortems
-│   │   ├── services/
-│   │   │   ├── claude_service.py    # LLM routing (Gemini → Claude fallback)
-│   │   │   ├── rag_service.py       # pgvector semantic search
-│   │   │   ├── embedding_service.py
-│   │   │   ├── memory_loader.py     # Loads markdown memory into system prompt
-│   │   │   └── session_briefing.py  # Builds session brief for new conversations
-│   │   ├── config.py
-│   │   ├── database.py
-│   │   └── main.py
-│   ├── scripts/
-│   │   └── nightly_diary.py    # Writes today's conversations to diary
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── .env.example
-├── mcp_server/
-│   └── gaia_mcp.py         # MCP server — exposes Gaia to Claude Code
-├── memory_sync/
-│   └── auto_commit.py      # Watches memory/ and auto-commits every .md change
-├── obsidian_sync/
-│   └── watcher.py          # Syncs Obsidian vault + memory/ into pgvector
-├── memory/                 # Your personal memory files (gitignored)
-│   ├── core/               # identity.md, user-profile.md, rules.md
-│   ├── skills/             # Skill files with <!-- triggers: kw --> headers
-│   ├── reminders/          # open.md, completed.md
-│   ├── decisions/          # decisions-log.md
-│   ├── plans/active/       # Work plan checklists
-│   ├── projects/           # LRU project tracker + manifest
-│   ├── post-mortems/       # Post-mortem reports
-│   ├── diary/              # Daily conversation diary
-│   └── library/            # Reference knowledge by topic
-├── docker-compose.yml
-├── backup.bat
-└── restore.bat
-```
-
----
-
-## Getting Started
-
-### Requirements
-
-- Python 3.12+
-- Docker Desktop
-- Anthropic API key → [console.anthropic.com](https://console.anthropic.com)
-
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/irfan941/project-gaia.git
-cd project-gaia
-```
-
-### 2. Set up environment
+**Requirements**: Docker, Python 3.12+, Anthropic API key
 
 ```bash
 cd backend
-cp .env.example .env   # Windows: copy .env.example .env
-# Edit .env — add your ANTHROPIC_API_KEY
-```
-
-### 3. Set up the memory folder
-
-```bash
-mkdir memory\core memory\skills memory\reminders memory\decisions memory\plans\active memory\projects\_active memory\projects\_archive memory\diary memory\post-mortems memory\library
-```
-
-Create `memory/core/identity.md` with your AI's identity, and `memory/core/user-profile.md` with facts about yourself. These files are loaded into every prompt automatically.
-
-### 4. Start the database and backend
-
-```bash
+cp .env.example .env   # Add your ANTHROPIC_API_KEY
 docker-compose up -d db
-
-cd backend
 pip install -r requirements.txt
-set MEMORY_ROOT=C:\path\to\gaia\memory   # Windows (local dev only)
 uvicorn app.main:app --reload
 ```
 
-> When running via `docker-compose up --build`, `MEMORY_ROOT` is set automatically.
+This adds:
+- pgvector semantic search over all ingested notes
+- Nightly diary auto-written from conversation history
+- REST API for structured memory (decisions, reminders, plans, projects)
+- MCP server for Claude Code IDE integration
 
----
-
-## MCP Server (Claude Code Integration)
-
-This is the primary way to use Gaia — query your second brain directly from your IDE.
-
-```bash
-pip install mcp httpx
-python mcp_server/gaia_mcp.py
-```
-
-Add to your Claude Code MCP config (`~/.claude/claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "gaia": {
-      "command": "python",
-      "args": ["C:/path/to/gaia/mcp_server/gaia_mcp.py"]
-    }
-  }
-}
-```
-
-Available tools in Claude Code:
-
-| Tool | What it does |
-|---|---|
-| `gaia_search` | Semantic search over all your notes and documents |
-| `gaia_list_memories` | List all stored key-value memories |
-| `gaia_add_memory` | Store a fact permanently |
-| `gaia_delete_memory` | Remove a memory by key |
-| `gaia_ingest_text` | Add text to the knowledge base |
-| `gaia_list_documents` | List all ingested documents |
-| `gaia_health` | Check if backend is running |
-
----
-
-## Memory System
-
-Gaia's memory lives in the `memory/` folder as plain markdown files. This folder is **gitignored** — your personal data never gets pushed.
-
-| Folder | Loaded how | Purpose |
-|---|---|---|
-| `core/` | Every prompt | Identity, user profile, rules |
-| `skills/` | When triggers match | Skill protocols with `<!-- triggers: kw -->` |
-| `reminders/` | New conversations | Open reminders surfaced in session brief |
-| `decisions/` | On-demand (RAG) | Append-only decision log |
-| `plans/active/` | On-demand (RAG) | Work plan checklists |
-| `projects/` | New conversations | Top 3 active projects in session brief |
-| `post-mortems/` | On-demand (RAG) | Post-mortem analysis |
-| `diary/` | New conversations | Last diary snippet in session brief |
-| `library/` | On-demand (RAG) | Reference knowledge by topic |
-
----
-
-## Obsidian Auto-Sync (Optional)
-
-Watches your Obsidian vault and `memory/` folder and ingests changed `.md` files into pgvector.
-
-```bash
-cd obsidian_sync
-pip install watchdog requests
-set OBSIDIAN_VAULT=C:\Users\YourName\Documents\ObsidianVault
-python watcher.py
-```
-
----
-
-## Nightly Diary
-
-Reads today's conversations from the database and appends them to `memory/diary/Daily-Diary-NNN.md`. Auto-archives at 1000 lines.
-
-```bash
-cd backend
-python -m scripts.nightly_diary
-```
-
-Schedule daily via Task Scheduler or cron:
-```
-0 23 * * * cd /app && python -m scripts.nightly_diary
-```
-
----
-
-## Memory Auto-Commit
-
-Watches `memory/` and commits every `.md` change to git — simple disaster recovery.
-
-```bash
-pip install watchdog
-python memory_sync/auto_commit.py
-```
-
----
-
-## Backup & Restore
-
-```bash
-backup.bat                                        # Backup DB → backups/
-restore.bat backups\gaia_backup_2026-05-06.sql    # Restore from backup
-```
+**The core markdown system works without this.** Backend is opt-in for power users.
 
 ---
 
 ## License
 
 MIT — free to use, modify, and deploy.
+
+---
+
+*Inspired by [Project-AI-MemoryCore](https://github.com/Kiyoraka/Project-AI-MemoryCore) by Kiyoraka Ken & Alice*
