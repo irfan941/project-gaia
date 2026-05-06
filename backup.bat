@@ -30,7 +30,7 @@ if "%CONTAINER%"=="" (
 echo Found container: %CONTAINER%
 echo Exporting database...
 
-docker exec %CONTAINER% pg_dump -U postgres aria > "%BACKUP_DIR%\%FILENAME%"
+docker exec %CONTAINER% pg_dump -U postgres gaia > "%BACKUP_DIR%\%FILENAME%"
 
 if %ERRORLEVEL% == 0 (
     echo.
@@ -38,7 +38,7 @@ if %ERRORLEVEL% == 0 (
     echo   backups\%FILENAME%
     echo.
     echo To restore on a new device:
-    echo   docker exec -i ^<container^> psql -U postgres aria ^< backups\%FILENAME%
+    echo   docker exec -i ^<container^> psql -U postgres gaia ^< backups\%FILENAME%
 ) else (
     echo.
     echo ERROR: Backup failed. Check that Docker is running.

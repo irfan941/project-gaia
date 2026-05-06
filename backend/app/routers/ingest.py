@@ -1,15 +1,22 @@
 import uuid
 from fastapi import APIRouter, Depends, UploadFile, File
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
 from ..database import get_db
 from ..models.document import Document
 from ..schemas.chat import IngestTextRequest
 from ..services.embedding_service import embed_batch
+from ..services.rag_service import search_documents
 
 router = APIRouter()
 
 CHUNK_SIZE = 400  # words per chunk
+
+
+class SearchRequest(BaseModel):
+    query: str
+    limit: int = 5
 
 
 def chunk_text(text: str) -> list[str]:
@@ -65,6 +72,12 @@ async def ingest_file(file: UploadFile = File(...), db: AsyncSession = Depends(g
 
     await db.commit()
     return {"ingested_chunks": len(chunks), "filename": file.filename}
+
+
+@router.post("/search")
+async def search(request: SearchRequest, db: AsyncSession = Depends(get_db)):
+    docs = await search_documents(request.query, db, limit=request.limit)
+    return [{"title": d.title, "content": d.content, "source": d.source} for d in docs]
 
 
 @router.get("/documents")

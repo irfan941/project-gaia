@@ -3,6 +3,15 @@
 .env.local
 *.env
 
+# Personal data — never publish
+memory/
+
+# Local reference clones — not part of this project
+_reference/
+
+# Claude Code local settings — machine-specific paths
+.claude/
+
 # Python
 __pycache__/
 *.pyc

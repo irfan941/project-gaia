@@ -8,6 +8,7 @@ from ..database import get_db
 from ..models.conversation import Conversation, Message
 from ..schemas.chat import ChatRequest, ConversationOut, MessageOut
 from ..services import claude_service, rag_service
+from ..services.session_briefing import build_brief
 
 router = APIRouter()
 
@@ -28,6 +29,16 @@ async def chat(request: ChatRequest, db: AsyncSession = Depends(get_db)):
             title=request.message[:60],
         )
         db.add(conversation)
+        await db.flush()
+
+        # Inject session brief as first assistant message on new conversations
+        brief_msg = Message(
+            id=str(uuid.uuid4()),
+            conversation_id=conversation.id,
+            role="assistant",
+            content=build_brief(),
+        )
+        db.add(brief_msg)
         await db.flush()
 
     # Save user message
@@ -55,6 +66,9 @@ async def chat(request: ChatRequest, db: AsyncSession = Depends(get_db)):
     memories = await rag_service.get_all_memories(db)
 
     conv_id = conversation.id
+
+    # Commit conversation + user message before streaming so conv_id is always valid
+    await db.commit()
 
     async def generate():
         full_response = ""

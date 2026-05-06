@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import init_db
-from .routers import chat, ingest, memory
+from .routers import chat, ingest, memory, structured
 
 app = FastAPI(title="Gaia — Personal AI Assistant", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000", "http://localhost:3001"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -22,6 +22,7 @@ async def startup():
 app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
 app.include_router(ingest.router, prefix="/api/ingest", tags=["ingest"])
 app.include_router(memory.router, prefix="/api/memory", tags=["memory"])
+app.include_router(structured.router, prefix="/api/structured", tags=["structured"])
 
 
 @app.get("/health")

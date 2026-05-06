@@ -1,10 +1,10 @@
 @echo off
-:: Aria — Restore Script
-:: Usage: restore.bat backups\aria_backup_2026-04-15_10-00-00.sql
+:: Gaia — Restore Script
+:: Usage: restore.bat backups\gaia_backup_2026-04-15_10-00-00.sql
 
 if "%~1"=="" (
     echo Usage: restore.bat ^<backup_file^>
-    echo Example: restore.bat backups\aria_backup_2026-04-15.sql
+    echo Example: restore.bat backups\gaia_backup_2026-04-15.sql
     pause
     exit /b 1
 )
@@ -21,7 +21,7 @@ if not exist "%BACKUP_FILE%" (
 for /f "tokens=*" %%i in ('docker ps --filter "name=db" --filter "ancestor=pgvector/pgvector:pg16" --format "{{.Names}}" 2^>nul') do set CONTAINER=%%i
 
 if "%CONTAINER%"=="" (
-    echo ERROR: Aria database container not running.
+    echo ERROR: Gaia database container not running.
     echo Run: docker-compose up -d db
     pause
     exit /b 1
@@ -29,7 +29,7 @@ if "%CONTAINER%"=="" (
 
 echo.
 echo ================================================
-echo  Aria Restore
+echo  Gaia Restore
 echo  File: %BACKUP_FILE%
 echo  Container: %CONTAINER%
 echo ================================================
@@ -44,7 +44,7 @@ if /i not "%CONFIRM%"=="YES" (
 )
 
 echo Restoring...
-docker exec -i %CONTAINER% psql -U postgres aria < "%BACKUP_FILE%"
+docker exec -i %CONTAINER% psql -U postgres gaia < "%BACKUP_FILE%"
 
 if %ERRORLEVEL% == 0 (
     echo.
