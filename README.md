@@ -110,6 +110,32 @@ Features are organized by use — install only what you need. Each feature is a 
 | Skills | Custom AI skills that auto-trigger on keywords | `"Load skills"` |
 | Auto-Commit | Git backup — commits every memory file change automatically | `"Load auto-commit"` |
 
+### Tier 4 — Intelligence & Awareness
+
+| Feature | Description | Load Command |
+|---|---|---|
+| Echo Memory Recall | Search past diary sessions — narrative recall, not raw output | `"do you remember [X]"` |
+| Memory Consolidation | Merge identity + profile into one file, adds 500-line session limit | `"Load memory-consolidation"` |
+| Forge Self-Improvement | AI proposes new skills from detected patterns — human-in-the-loop | `"forge this"` / `"create skill"` |
+
+### Tier 5 — Hooks & Prompt Injection
+
+| Feature | Description | Load Command |
+|---|---|---|
+| Auto-Load Hook | Loads Gaia automatically on Claude Code startup | `"Install auto-load hook"` |
+| User-Prompt Hook | Generic hook framework — plug-in injectors attach to this | `"Install prompt hook"` |
+| Tone-Prompt Inject | Injects `TONE: [description]` into every prompt | `"Set tone: [name]"` |
+| Mood-Prompt Inject | Injects `MOOD: [description]` — AI adapts support style | `"Set mood: [name]"` |
+| Time-Prompt Inject | Injects timestamp + time period (MORNING/AFTERNOON/EVENING/NIGHT) | `"Install time inject"` |
+
+### Tier 6 — Creative
+
+| Feature | Description | Load Command |
+|---|---|---|
+| Image Prompt | Composition-aware Midjourney/NijiJourney prompt generation | `"Create a prompt for [X]"` |
+| Song Creation | Image → full concept album with story arc + Suno-ready style tags | `"Create songs from [image]"` |
+| Interactive Story | Visual Novel RPG — Duo/Solo, OP/Balanced, 7 world types, cinematic combat | `"New adventure"` |
+
 ---
 
 ## Basic Commands
