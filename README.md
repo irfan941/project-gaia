@@ -116,6 +116,10 @@ Features are organized by use — install only what you need. Each feature is a 
 |---|---|---|
 | Echo Memory Recall | Search past diary sessions — narrative recall, not raw output | `"do you remember [X]"` |
 | Memory Consolidation | Merge identity + profile into one file, adds 500-line session limit | `"Load memory-consolidation"` |
+| Session Briefing | Auto-delivers context brief at session start — projects, reminders, diary | `"brief"` |
+| Time-based Aware | Time-intelligent greetings + energy-adapted behavior (Morning/Afternoon/Evening/Night) | `"Load time-aware-core"` |
+| Observation | 4-tier code awareness — Survey → Investigate → Refine → Audit | `"survey"` / `"audit"` |
+| Mulahazah | Passive behavioral learning — captures patterns, writes persistent rules to rules.md | `"what have you learned"` |
 | Forge Self-Improvement | AI proposes new skills from detected patterns — human-in-the-loop | `"forge this"` / `"create skill"` |
 
 ### Tier 5 — Hooks & Prompt Injection
